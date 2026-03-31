@@ -1,0 +1,10 @@
+name: "DataCenterCooling-v1"
+version: "1.0.0"
+description: "Optimize data center server rack temperatures while minimizing total power consumption."
+tasks:
+  - id: "task_1_easy"
+    description: "Cool down Rack 1 below 25 degrees Celsius."
+  - id: "task_2_medium"
+    description: "Cool down all 3 racks below 25 degrees Celsius."
+  - id: "task_3_hard"
+    description: "Cool down all 3 racks below 25 degrees Celsius while maintaining total power consumption under 500W."
