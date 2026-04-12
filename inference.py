@@ -11,7 +11,7 @@ API_BASE_URL = os.getenv("API_BASE_URL", "https://generativelanguage.googleapis.
 MODEL_NAME = os.getenv("MODEL_NAME", "gemini-2.5-flash") 
 
 # 2. Put your REAL Gemini key right here (starts with AIza...)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyD5S2-UVzAmqfjt3hRwCj4vX4OwPkqX8Ew") 
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "GEMINI_API_KEYS") 
 
 # 3. Your live Hugging Face Space URL
 ENV_URL = os.getenv("ENV_URL", "https://rohannk-datacenter-openenv.hf.space")
