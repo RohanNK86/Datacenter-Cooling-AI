@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 import random
@@ -91,3 +92,9 @@ def step(action: Action):
         },
         "done": current_state.step_count >= 15 # End episode after 15 steps
     }
+
+def main():
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()
