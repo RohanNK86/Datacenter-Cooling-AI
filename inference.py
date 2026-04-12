@@ -23,16 +23,17 @@ client = OpenAI(
 )
 
 def run_inference():
+    task_name = "DatacenterCooling"
+    print(f"[START] task={task_name}", flush=True)
+
     print("Initializing environment...")
     
     try:
         state_resp = requests.post(f"{ENV_URL}/reset").json()
     except Exception as e:
         print(f"Error connecting to environment: {e}")
+        print(f"[END] task={task_name} score=0.0 steps=0", flush=True)
         return
-
-    task_name = "DatacenterCooling"
-    print(f"[START] task={task_name}", flush=True)
 
     done = False
     step = 0
