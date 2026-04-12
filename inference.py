@@ -23,15 +23,22 @@ client = OpenAI(
 )
 
 def run_inference():
-    task_name = "DatacenterCooling"
+    import argparse
+    import os
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--task", type=str, default=os.environ.get("TASK", "task_1_easy"))
+    parser.add_argument("--task-id", type=str, dest="task_id", default=None)
+    args, _ = parser.parse_known_args()
+    task_name = args.task_id or args.task
+
     print(f"[START] task={task_name}", flush=True)
 
-    print("Initializing environment...")
+    print("Initializing environment...", flush=True)
     
     try:
         state_resp = requests.post(f"{ENV_URL}/reset").json()
     except Exception as e:
-        print(f"Error connecting to environment: {e}")
+        print(f"Error connecting to environment: {e}", flush=True)
         print(f"[END] task={task_name} score=0.0 steps=0", flush=True)
         return
 
@@ -62,7 +69,7 @@ def run_inference():
             
             action_str = response.choices[0].message.content
             action = json.loads(action_str)
-            print(f"Agent Action: {action}")
+            print(f"Agent Action: {action}", flush=True)
             
             # Take step in environment
             step_resp = requests.post(f"{ENV_URL}/step", json=action).json()
@@ -72,7 +79,12 @@ def run_inference():
             
             scores = step_resp.get('scores', {})
             if isinstance(scores, dict):
-                current_reward = sum(scores.values())
+                score_key = "easy"
+                if "medium" in task_name.lower():
+                    score_key = "medium"
+                elif "hard" in task_name.lower():
+                    score_key = "hard"
+                current_reward = float(scores.get(score_key, 0.0))
             elif isinstance(scores, (int, float)):
                 current_reward = float(scores)
             else:
@@ -81,13 +93,13 @@ def run_inference():
             total_current_score += current_reward
             
             print(f"[STEP] step={step} reward={current_reward}", flush=True)
-            print(f"Current Scores: {scores}\n")
+            print(f"Current Scores: {scores}\n", flush=True)
             
             # Pause to prevent rate limits
             time.sleep(8) 
             
         except Exception as e:
-            print(f"API Error: {e}")
+            print(f"API Error: {e}", flush=True)
             break
 
     print(f"[END] task={task_name} score={total_current_score} steps={step}", flush=True)
