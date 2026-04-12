@@ -30,9 +30,15 @@ def run_inference():
     except Exception as e:
         print(f"Error connecting to environment: {e}")
         return
-    
+
+    task_name = "DatacenterCooling"
+    print(f"[START] task={task_name}", flush=True)
+
     done = False
+    step = 0
+    total_current_score = 0.0
     while not done:
+        step += 1
         # Prepare prompt with current state
         prompt = f"""
         You are an AI managing a Data Center Cooling System.
@@ -62,7 +68,19 @@ def run_inference():
             
             state_resp = step_resp['state']
             done = step_resp['done']
-            print(f"Current Scores: {step_resp['scores']}\n")
+            
+            scores = step_resp.get('scores', {})
+            if isinstance(scores, dict):
+                current_reward = sum(scores.values())
+            elif isinstance(scores, (int, float)):
+                current_reward = float(scores)
+            else:
+                current_reward = 0.0
+                
+            total_current_score += current_reward
+            
+            print(f"[STEP] step={step} reward={current_reward}", flush=True)
+            print(f"Current Scores: {scores}\n")
             
             # Pause to prevent rate limits
             time.sleep(8) 
@@ -70,6 +88,8 @@ def run_inference():
         except Exception as e:
             print(f"API Error: {e}")
             break
+
+    print(f"[END] task={task_name} score={total_current_score} steps={step}", flush=True)
 
 if __name__ == "__main__":
     run_inference()
