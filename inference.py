@@ -4,6 +4,15 @@ import json
 import time
 from openai import OpenAI
 
+# Load variables from .env file if it exists
+if os.path.exists(".env"):
+    with open(".env") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, val = line.split("=", 1)
+                os.environ[key.strip()] = val.strip()
+
 # 1. Point the OpenAI client to Google's Gemini servers!
 API_BASE_URL = os.getenv("API_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 
