@@ -9,7 +9,12 @@ description = "OpenEnv simulation for Smart Data Center Cooling System"
 authors = [
     {name = "Tensor Tacos"}
 ]
+readme = "Readme.md"
+requires-python = ">=3.9"
 dependencies = [
-    "openai",
-    "requests"
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "requests",
+    "openai"
 ]
